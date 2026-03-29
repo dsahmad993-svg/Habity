@@ -1,0 +1,186 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Habit Tracker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Ropa+Sans&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<main class="app">
+        <section class="top">
+            <div class="title">
+                <h1 id="monthTitle">Habit Tracker</h1>
+                <div class="row">
+                    <label for="monthPicker">Month</label>
+                    <input id="monthPicker" type="month">
+                    <input id="quickDate" class="quick-date" type="date" aria-label="Quick date jump">
+                    <button id="todayBtn" type="button">Today</button>
+                    <button id="themeCycleBtn" class="theme-btn" type="button">Theme: Signature</button>
+                </div>
+            </div>
+            <div class="stat">
+                <small>Number of habits</small>
+                <strong id="habitCount">0</strong>
+            </div>
+            <div class="stat">
+                <small>Completed checks</small>
+                <strong id="completedCount">0</strong>
+            </div>
+            <div class="stat">
+                <small>Progress</small>
+                <strong id="progressValue">0%</strong>
+                <div class="meter"><div id="progressFill"></div></div>
+            </div>
+        </section>
+
+        <section class="creator-wrap">
+            <div id="creator" class="creator">
+                <div class="creator-main">
+                    <input id="habitName" type="text" placeholder="Enter habit name">
+                    <button id="addHabitBtn" title="Add New" class="add-plus" type="button">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22Z" stroke-width="1.5"></path>
+                            <path d="M8 12H16" stroke-width="1.5"></path>
+                            <path d="M12 16V8" stroke-width="1.5"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="creator-extra">
+                    <div class="toggle-wrap">
+                        <span class="toggle-label">Done</span>
+                        <div class="toggle-container">
+                            <input id="modeToggle" class="toggle-input" type="checkbox" aria-label="Toggle quantity mode">
+                            <svg class="toggle" viewBox="0 0 292 142" xmlns="http://www.w3.org/2000/svg">
+                                <path class="toggle-background" d="M16.5 0C7.39 0 0 7.39 0 16.5v109C0 134.61 7.39 142 16.5 142h259c9.11 0 16.5-7.39 16.5-16.5v-109C292 7.39 284.61 0 275.5 0h-259z"></path>
+                                <g class="toggle-circle-center">
+                                    <circle class="toggle-circle left" cx="71" cy="71" r="58"></circle>
+                                    <circle class="toggle-circle right" cx="71" cy="71" r="58"></circle>
+                                </g>
+                                <path class="toggle-icon off" d="M121 95h-7l-5-13h-25l-5 13h-7l22-56h5l22 56zm-34-19h20L97 49 87 76z"></path>
+                                <path class="toggle-icon on" d="M177 41h26c16 0 26 9 26 24s-10 24-26 24h-17v20h-9V41zm26 40c11 0 17-6 17-16s-6-16-17-16h-17v32h17z"></path>
+                            </svg>
+                        </div>
+                        <span class="toggle-label">Quantity</span>
+                    </div>
+
+                    <input id="habitTarget" class="quantity-only" type="number" min="1" step="1" placeholder="Target">
+                    <input id="habitUnit" class="quantity-only" type="text" maxlength="20" placeholder="Unit (glasses)">
+                </div>
+            </div>
+        </section>
+
+        <section class="table-panel">
+            <table id="trackerTable"></table>
+        </section>
+
+        <section class="below">
+            <article class="panel">
+                <h2>This Week Progress</h2>
+                <div id="weekCircles" class="week-circles"></div>
+                <canvas id="trendCanvas" width="1000" height="160"></canvas>
+            </article>
+
+            <article class="panel">
+                <h2>Analysis</h2>
+                <div id="analysisList" class="analysis-list"></div>
+                <p class="hint">Quantity habits count as done when value is at least target.</p>
+            </article>
+        </section>
+
+        <section class="journal">
+            <div class="journal-grid">
+                <label for="journalDate">Daily Journal Date</label>
+                <input id="journalDate" type="date">
+                <button id="saveJournalBtn" type="button">Save Journal</button>
+            </div>
+            <textarea id="journalText" placeholder="Write your journal here for selected date..."></textarea>
+            <p class="hint">Journal is date-based, saved automatically with data, and included in export/import.</p>
+        </section>
+
+        <section class="data-zone">
+            <div class="data-cards">
+                <article class="data-card">
+                    <div class="card-top"><span>EXPORT DATA</span><span>01</span></div>
+                    <textarea id="exportCode" class="code-area" readonly placeholder="Click Generate Code..."></textarea>
+                    <div class="crypto-row">
+                        <input id="exportPassword" type="password" placeholder="Optional password">
+                        <small>Encrypted if password is set</small>
+                    </div>
+                    <div class="wallet-actions">
+                        <button id="genCodeBtn" class="wallet-btn" type="button">Generate Code</button>
+                        <button id="downloadBtn" class="wallet-btn" type="button">Download JSON</button>
+                    </div>
+                </article>
+
+                <article class="data-card">
+                    <div class="card-top"><span>IMPORT DATA</span><span>02</span></div>
+                    <textarea id="importCode" class="code-area" placeholder="Paste backup code here..."></textarea>
+                    <div class="crypto-row">
+                        <input id="importPassword" type="password" placeholder="Optional password">
+                        <small>Needed for encrypted code</small>
+                    </div>
+                    <div class="wallet-actions">
+                        <button id="applyCodeBtn" class="wallet-btn" type="button">Import Code</button>
+                        <button id="importBtn" class="wallet-btn" type="button">Import JSON File</button>
+                    </div>
+                    <input id="importInput" type="file" accept="application/json" hidden>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <div id="editModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="editTitle">
+        <div class="modal-card">
+            <h3 id="editTitle">Edit Habit</h3>
+            <div class="modal-grid">
+                <input id="editName" type="text" placeholder="Habit name">
+                <div class="toggle-wrap" style="grid-column: span 2;">
+                    <span class="toggle-label">Done</span>
+                    <div class="toggle-container">
+                        <input id="editModeToggle" class="toggle-input" type="checkbox" aria-label="Toggle edit quantity mode">
+                        <svg class="toggle" viewBox="0 0 292 142" xmlns="http://www.w3.org/2000/svg">
+                            <path class="toggle-background" d="M16.5 0C7.39 0 0 7.39 0 16.5v109C0 134.61 7.39 142 16.5 142h259c9.11 0 16.5-7.39 16.5-16.5v-109C292 7.39 284.61 0 275.5 0h-259z"></path>
+                            <g class="toggle-circle-center">
+                                <circle class="toggle-circle left" cx="71" cy="71" r="58"></circle>
+                                <circle class="toggle-circle right" cx="71" cy="71" r="58"></circle>
+                            </g>
+                            <path class="toggle-icon off" d="M121 95h-7l-5-13h-25l-5 13h-7l22-56h5l22 56zm-34-19h20L97 49 87 76z"></path>
+                            <path class="toggle-icon on" d="M177 41h26c16 0 26 9 26 24s-10 24-26 24h-17v20h-9V41zm26 40c11 0 17-6 17-16s-6-16-17-16h-17v32h17z"></path>
+                        </svg>
+                    </div>
+                    <span class="toggle-label">Quantity</span>
+                </div>
+                <input id="editTarget" class="quantity-only" type="number" min="1" step="1" placeholder="Target">
+                <input id="editUnit" class="quantity-only" type="text" maxlength="20" placeholder="Unit">
+            </div>
+            <div class="modal-actions">
+                <button id="cancelEdit" type="button">Cancel</button>
+                <button id="saveEdit" type="button">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="historyModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="historyTitle">
+        <div class="modal-card">
+            <h3 id="historyTitle">Habit History</h3>
+            <p id="historyMeta" class="hint"></p>
+            <canvas id="historyCanvas" class="history-canvas" width="700" height="220"></canvas>
+            <div class="modal-actions" style="margin-top:10px;">
+                <button id="closeHistory" type="button">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="undoToast" class="toast" role="status" aria-live="polite">
+        <span id="undoText">Habit deleted</span>
+        <button id="undoBtn" type="button">Undo</button>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
